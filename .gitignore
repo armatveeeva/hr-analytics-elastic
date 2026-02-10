@@ -1,0 +1,14 @@
+﻿__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Данные
+data/
+!data/.gitkeep
+
+# IDE.vscode/.idea/
+*.swp
