@@ -1,77 +1,40 @@
-﻿HR Analytics Pipeline with Elasticsearch
+# HR-аналитика с использованием Elasticsearch
 
-Data processing pipeline for HR analytics with Elasticsearch indexing and Kibana visualization.
+Пайплайн обработки и визуализации HR-данных с применением Elasticsearch и Kibana.
 
-Business requirements:
-- Filter employees by salary range (50 000 – 200 000 RUB)
-- Filter employees by height (> 160 cm)
-- Index filtered data into Elasticsearch
-- Visualize metrics in Kibana dashboard
+## Требования
 
-Architecture
-------------
-Source data (JSON)
-        ↓
-Business logic filtering (Python)
-        ↓
-Elasticsearch indexing
-        ↓
-Kibana dashboard visualization
+Реализован скрипт загрузки данных в Elasticsearch с последующей фильтрацией по следующим критериям:
+- Сотрудники с зарплатой от 50 000 до 200 000 рублей;
+- Рост сотрудников строго больше 160 см.
 
-Technology stack
-----------------
-- Python 3.11
-- Elasticsearch 8.x client library
-- Kibana 8.x for visualization
+Результаты индексируются в Elasticsearch и визуализируются в дашборде Kibana.
 
-Project structure
------------------
-config/
-    index_mapping.json    Elasticsearch index mapping definition
-src/
-    loader.py             Main data processing and indexing module
-docs/
-    dashboard.md          Dashboard specification and metrics
-requirements.txt          Python dependencies
-.env.example              Environment variables template
-.gitignore                Git ignore rules
+## Технологический стек
 
-Setup and execution
--------------------
-1. Clone repository (if applicable)
-   git clone https://github.com/anastasiia-matveeva/hr-analytics-elastic.git
+- Язык программирования: Python 3.11
+- Библиотека: elasticsearch-py
+- Хранилище данных: Elasticsearch 8.x
+- Система визуализации: Kibana 8.x
 
-2. Create virtual environment and install dependencies
-   python -m venv venv
-   venv\Scripts\activate
-   pip install -r requirements.txt
+## Структура проекта
 
-3. Configure connection parameters
-   copy .env.example .env
-   # Edit .env with actual Elasticsearch credentials
+hr-analytics-elastic/
 
-4. Prepare source data
-   # Place source JSON file into data/job.json
-   # Note: data/ directory is excluded from Git by .gitignore
+├── config/
 
-5. Execute data loading pipeline
-   python -m src.loader
+│ └── index_mapping.json # Определение маппинга индекса Elasticsearch
 
-Security notes
---------------
-- Connection credentials are passed via environment variables (.env)
-- Source data files are excluded from version control (.gitignore)
-- No personally identifiable information is stored in the repository
-- All data processing complies with internal information security policies
+├── src/
 
-Author
-------
-Matveeva Anastasiia Ruslanovna
-Senior Specialist, Department of Development and New Businesses
-JSC NPO CNIITMASH (Rosatom State Corporation)
-armatveeva@rosatom.ru
+│ └── loader.py # Основной модуль загрузки и фильтрации данных
 
-License
--------
-MIT License
-Copyright (c) 2026 Anastasiia Matveeva
+├── docs/
+
+│ └── dashboard.md # Спецификация дашборда Kibana
+
+├── requirements.txt # Зависимости Python
+
+├── .env.example # Шаблон переменных окружения
+
+└── .gitignore # Правила исключения файлов из Git
