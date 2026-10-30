@@ -1,0 +1,15 @@
+﻿{
+  "mappings": {
+    "properties": {
+      "Фамилия": { "type": "text" },
+      "Имя": { "type": "text" },
+      "Пол": { "type": "keyword" },
+      "Возраст": { "type": "integer" },
+      "Рост": { "type": "integer" },
+      "Город": { "type": "text" },
+      "Должность": { "type": "text" },
+      "Зарплата": { "type": "integer" },
+      "Транспорт": { "type": "keyword" }
+    }
+  }
+}
