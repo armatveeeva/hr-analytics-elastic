@@ -1,13 +1,13 @@
-﻿{
+{
   "mappings": {
     "properties": {
-      "Фамилия": { "type": "text" },
-      "Имя": { "type": "text" },
+      "Фамилия": { "type": "keyword" },
+      "Имя": { "type": "keyword" },
       "Пол": { "type": "keyword" },
       "Возраст": { "type": "integer" },
       "Рост": { "type": "integer" },
-      "Город": { "type": "text" },
-      "Должность": { "type": "text" },
+      "Город": { "type": "keyword" },
+      "Должность": { "type": "keyword" },
       "Зарплата": { "type": "integer" },
       "Транспорт": { "type": "keyword" }
     }
