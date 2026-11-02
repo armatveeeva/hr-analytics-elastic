@@ -1,12 +1,12 @@
 # HR-аналитика с использованием Elasticsearch
 
+[![CI](https://github.com/armatveeeva/hr-analytics-elastic/actions/workflows/ci.yml/badge.svg)](https://github.com/armatveeeva/hr-analytics-elastic/actions)
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.x-blue)](https://www.elastic.co/elasticsearch/)
 [![Kibana](https://img.shields.io/badge/Kibana-8.x-yellow)](https://www.elastic.co/kibana/)
 
-Репозиторий содержит пайплайн обработки, фильтрации и визуализации HR-данных с применением Elasticsearch и Kibana. 
-
+Репозиторий содержит пайплайн обработки, фильтрации и визуализации HR-данных с применением Elasticsearch и Kibana.
 Данный этап работы реализует скрипт загрузки данных, их первичную фильтрацию по строгим бизнес-критериям и подготовку инфраструктуры (маппинг и спецификацию дашборда) для последующей аналитики. Результаты индексируются в Elasticsearch и визуализируются в дашборде Kibana.
 
 ## Описание предметной области
@@ -39,14 +39,28 @@
 - **Система визуализации:** Kibana 8.x
 - **Управление конфигурацией:** `python-dotenv`
 
+## Архитектура
+
+```mermaid
+flowchart LR
+    A["data/job.json"] --> B["services/loader.py<br/>чтение"]
+    B --> C["schemas.py<br/>валидация Pydantic"]
+    C --> D["services/filtering.py<br/>бизнес-правила"]
+    D -->|прошли| E["repositories/employees.py<br/>bulk-индексация"]
+    D -->|отброшены| F["статистика в логе"]
+    E --> G[("Elasticsearch")]
+    G --> H["Kibana: дашборд"]
+```
+
 ## Быстрый старт
-
-### Предварительные требования
-Убедитесь, что на вашем компьютере установлен Python 3.11 или выше, а также развернуты и запущены кластеры Elasticsearch и Kibana версии 8.x.
-
-### Установка и настройка
 
 1. Клонируйте репозиторий:
 ```bash
 git clone https://github.com/armatveeeva/hr-analytics-elastic.git
 cd hr-analytics-elastic
+cp .env.example .env
+make install        # зависимости и pre-commit
+make up             # Elasticsearch + Kibana (Kibana: http://localhost:5601)
+make create-index   # индекс по маппингу
+make load           # загрузка и фильтрация data/job.json
+```
