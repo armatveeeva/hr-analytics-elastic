@@ -1,53 +1,53 @@
 import json
 import logging
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Protocol
 
 from pydantic import ValidationError
 
 from hr_analytics.config import Settings
-from hr_analytics.repositories.employees import EmployeeRepository
 from hr_analytics.schemas import EmployeeIn
 from hr_analytics.services.filtering import passes_rules
 
 log = logging.getLogger(__name__)
 
 
-def load_data(data_path: str, settings: Settings, repo: EmployeeRepository) -> None:
-    file_path = Path(data_path)
-    if not file_path.exists():
-        log.warning("Файл данных не найден: %s", data_path)
-        return
+class DocumentSink(Protocol):
+    def bulk_index(self, docs: list[dict[str, Any]]) -> int: ...
 
-    with file_path.open("r", encoding="utf-8") as f:
-        raw_data = json.load(f)
 
+@dataclass(frozen=True)
+class LoadStats:
+    total: int
+    invalid: int
+    filtered: int
+    indexed: int
+
+
+def load_data(data_path: Path, settings: Settings, sink: DocumentSink) -> LoadStats:
+    if not data_path.exists():
+        raise FileNotFoundError(f"Файл данных не найден: {data_path}")
+
+    raw_data = json.loads(data_path.read_text(encoding="utf-8"))
     if not isinstance(raw_data, list):
-        log.error("Ожидался список записей в исходном файле")
-        return
+        raise ValueError("Ожидался список записей в исходном файле")
 
-    valid_docs = []
-    invalid_count = 0
-    filtered_count = 0
-
+    docs: list[dict[str, Any]] = []
+    invalid = filtered = 0
     for i, row in enumerate(raw_data):
         try:
-            emp = EmployeeIn(**row)
+            emp = EmployeeIn.model_validate(row)
         except ValidationError as exc:
-            invalid_count += 1
-            log.debug("Невалидная строка %d: %s", i, exc)
+            invalid += 1
+            log.warning("Невалидная строка %d: %s", i, exc.errors(include_url=False))
             continue
-
         if passes_rules(emp, settings):
-            valid_docs.append(emp.model_dump())
+            docs.append(emp.model_dump())
         else:
-            filtered_count += 1
+            filtered += 1
 
-    log.info(
-        "Обработано записей: всего=%d, невалидных=%d, отфильтровано=%d, принято=%d",
-        len(raw_data), invalid_count, filtered_count, len(valid_docs)
-    )
-
-    if valid_docs:
-        repo.bulk_index(valid_docs)
-    else:
-        log.warning("Нет валидных записей для индексации после фильтрации.")
+    indexed = sink.bulk_index(docs) if docs else 0
+    if not docs:
+        log.warning("Нет записей для индексации после валидации и фильтрации")
+    return LoadStats(len(raw_data), invalid, filtered, indexed)
