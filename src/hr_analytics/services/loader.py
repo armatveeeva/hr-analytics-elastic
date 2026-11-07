@@ -1,14 +1,12 @@
 import json
 import logging
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Protocol
-
-from pydantic import ValidationError
 
 from hr_analytics.config import Settings
 from hr_analytics.schemas import EmployeeIn
 from hr_analytics.services.filtering import passes_rules
+from pydantic import ValidationError
 
 log = logging.getLogger(__name__)
 
@@ -25,11 +23,12 @@ class LoadStats:
     indexed: int
 
 
-def load_data(data_path: Path, settings: Settings, sink: DocumentSink) -> LoadStats:
+def load_data(settings: Settings, sink: DocumentSink) -> LoadStats:
+    data_path = settings.data_path
     if not data_path.exists():
         raise FileNotFoundError(f"Файл данных не найден: {data_path}")
 
-    raw_data = json.loads(data_path.read_text(encoding="utf-8"))
+    raw_data: list[Any] = json.loads(data_path.read_text(encoding="utf-8"))
     if not isinstance(raw_data, list):
         raise ValueError("Ожидался список записей в исходном файле")
 
@@ -50,4 +49,7 @@ def load_data(data_path: Path, settings: Settings, sink: DocumentSink) -> LoadSt
     indexed = sink.bulk_index(docs) if docs else 0
     if not docs:
         log.warning("Нет записей для индексации после валидации и фильтрации")
+        return LoadStats(len(raw_data), invalid, filtered, 0)
+
+    indexed = sink.bulk_index(docs)
     return LoadStats(len(raw_data), invalid, filtered, indexed)
