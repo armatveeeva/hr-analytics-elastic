@@ -1,7 +1,7 @@
 # HR-аналитика с использованием Elasticsearch
 
-[![CI](https://github.com/armatveeeva/hr-analytics-elastic/actions/workflows/ci.yml/badge.svg)](https://github.com/armatveeeva/hr-analytics-elastic/actions)
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
+[![CI](https://github.com/armatveeeva/hr-analytics-elastic/actions/workflows/ci.yml/badge.svg)](https://github.com/armatveeeva/hr-analytics-elastic/actions)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8.x-blue)](https://www.elastic.co/elasticsearch/)
 [![Kibana](https://img.shields.io/badge/Kibana-8.x-yellow)](https://www.elastic.co/kibana/)

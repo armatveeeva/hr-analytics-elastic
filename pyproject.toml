@@ -1,41 +1,37 @@
 [tool.poetry]
 name = "hr-analytics-elastic"
 version = "0.1.0"
-description = "HR analytics pipeline with Elasticsearch"
-authors = ["Anastasiia Matveeva <armatveeeva@gmail.com>"]
-packages = [{ include = "hr_analytics", from = "src" }]
+description = "HR data pipeline with Elasticsearch"
+authors = ["armatveeeva <armatveeeva@gmail.com>"]
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-elasticsearch = "^8.15.0"
-pydantic = "^2.9.0"
-pydantic-settings = "^2.5.0"
+elasticsearch = ">=8.0.0,<9.0.0"
+python-dotenv = ">=1.0.0"
+pydantic = ">=2.0.0"
+pandas = ">=2.0.0"
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.6.9"
-mypy = "^1.11.0"
-pytest = "^8.3.0"
-pytest-cov = "^5.0.0"
-pre-commit = "^3.8.0"
+ruff = ">=0.4.0"
+mypy = ">=1.10.0"
+pytest = ">=8.0.0"
+pre-commit = ">=3.7.0"
 
 [tool.ruff]
-line-length = 100
+line-length = 88
 target-version = "py311"
-src = ["src", "tests"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "SIM", "C4", "T20"]
+select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.mypy]
-python_version = "3.11"
 strict = true
-plugins = ["pydantic.mypy"]
-mypy_path = "src"
-explicit_package_bases = true
+python_version = "3.11"
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "--cov=hr_analytics"
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_decorators = false
 
 [build-system]
 requires = ["poetry-core"]
