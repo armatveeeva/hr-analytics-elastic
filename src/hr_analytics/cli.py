@@ -2,8 +2,6 @@ import argparse
 import logging
 import sys
 
-import sink
-
 from hr_analytics.config import Settings
 from hr_analytics.repositories.client import build_client
 from hr_analytics.repositories.employees import EmployeeRepository
@@ -40,7 +38,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "create-index":
             repo.ensure_index(settings.mapping_path)
         else:
-            stats = load_data(settings, sink)
+            stats = load_data(settings, repo)
             log.info(
                 "Всего=%d, невалидных=%d, отфильтровано=%d, проиндексировано=%d",
                 stats.total,
