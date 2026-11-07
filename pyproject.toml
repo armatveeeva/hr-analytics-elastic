@@ -31,6 +31,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 strict = true
 python_version = "3.11"
 mypy_path = "src"
+explicit_package_bases = true
 
 [[tool.mypy.overrides]]
 module = "tests.*"
