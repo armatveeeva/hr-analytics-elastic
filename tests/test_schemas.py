@@ -1,7 +1,7 @@
 import pytest
-from hr_analytics.schemas import EmployeeIn
 from pydantic import ValidationError
 
+from hr_analytics.schemas import EmployeeIn
 from tests.test_filtering import BASE
 
 

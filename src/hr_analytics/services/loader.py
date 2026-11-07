@@ -3,10 +3,11 @@ import logging
 from dataclasses import dataclass
 from typing import Any, Protocol
 
+from pydantic import ValidationError
+
 from hr_analytics.config import Settings
 from hr_analytics.schemas import EmployeeIn
 from hr_analytics.services.filtering import passes_rules
-from pydantic import ValidationError
 
 log = logging.getLogger(__name__)
 
