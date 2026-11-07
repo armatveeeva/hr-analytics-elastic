@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "HR data pipeline with Elasticsearch"
 authors = ["armatveeeva <armatveeeva@gmail.com>"]
 readme = "README.md"
+packages = [{include = "hr_analytics", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
