@@ -24,11 +24,11 @@ def test_load_data_stats(tmp_path: Path) -> None:
     path.write_text(json.dumps(rows, ensure_ascii=False), encoding="utf-8")
 
     sink = FakeSink()
-    stats = load_data(path, Settings(_env_file=None), sink)
+    stats = load_data(Settings(_env_file=None, data_path=path), sink)
 
     assert (stats.total, stats.invalid, stats.filtered, stats.indexed) == (3, 1, 1, 1)
 
 
 def test_missing_file_raises(tmp_path: Path) -> None:
     with pytest.raises(FileNotFoundError):
-        load_data(tmp_path / "nope.json", Settings(_env_file=None), FakeSink())
+        load_data(Settings(_env_file=None, data_path=tmp_path / "nope.json"), FakeSink())
